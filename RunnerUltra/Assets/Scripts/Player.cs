@@ -1,52 +1,75 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 
 public class Player : MonoBehaviour {
 
-	[SerializeField]
-	private Rigidbody rigidbody;
+[SerializeField]
+private Rigidbody rigitBody;
+[SerializeField]
+private float speed; 
+public float Speed {get {return speed;} set{speed = value;}}
+[SerializeField]
+private float sideSpeed;
+[SerializeField]
+private float jumpSpeed;
+private int jumpCount = 0;
+public Action onGameOver;
+public Action onGameWin;
 
-	[SerializeField]
-	private float speed;
-
-	[SerializeField]
-	private float sideSpeed;
-
-	public Action onGameOver, onWin;
+	private void Start () {
+		//rigitBody.AddForce(0,0,9000);
+	}
 	
 	private void Update () {
-		rigidbody.AddForce(0, 0, speed * Time.deltaTime);
-
-		if(Input.GetKey(KeyCode.A)){
-			rigidbody.AddForce(-sideSpeed * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
-		}else if(Input.GetKey(KeyCode.D)){
-			rigidbody.AddForce(sideSpeed * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
-		}
+	rigitBody.AddForce(0,0,speed * Time.deltaTime,ForceMode.VelocityChange);	
+	
+	if(transform.position.y < 0){		
+		if(onGameOver != null){				
+				onGameOver();				
+			}				
 	}
 
-	private void OnCollisionEnter(Collision other) {
-		if(other.gameObject.tag == "Obstacle"){
-			// disable this component
-			this.enabled = false;
+	if(Input.GetKey(KeyCode.A)){
+		rigitBody.AddForce(-sideSpeed * Time.deltaTime,0,0,ForceMode.VelocityChange);
+	}else if(Input.GetKey(KeyCode.D)){
+		rigitBody.AddForce(sideSpeed * Time.deltaTime,0,0,ForceMode.VelocityChange);
+	}else if(Input.GetKey(KeyCode.Space)){
+		 if (jumpCount < 1) 
+     { 
+		rigitBody.AddForce(0,jumpSpeed * Time.deltaTime,0,ForceMode.VelocityChange);
+		jumpCount++;
+	 } 
+	}
 
-			if(onGameOver != null){
+	
+	}
+	private void OnCollisionEnter(Collision other){
+		if(other.gameObject.tag == "Obstacle"){
+			this.enabled = false;
+			if(onGameOver != null){				
 				onGameOver();
 			}
+		}
+		else if(other.gameObject.tag == "Ground"){
+			jumpCount = 0;
+		}	
+		else if(other.gameObject.tag == "Finish"){
+			this.enabled = false;
+			if(onGameWin != null){
+				onGameWin();
+			}				
 		}
 	}
 
 	private void OnTriggerEnter(Collider other) {
-		if(other.tag == "Coin"){
-			//destroy other object
-			Destroy(other.gameObject);
-			Debug.Log("Pick up coin");
-		}else if(other.tag == "Finish")
-		{
-			if(onWin != null){
-				onWin();
-			}
-		}
+		if(other.tag == "Finish"){
+			this.enabled = false;
+			if(onGameWin != null){
+				onGameWin();
+			}				
+	}
 	}
 }

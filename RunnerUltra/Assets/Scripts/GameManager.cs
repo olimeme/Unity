@@ -1,47 +1,57 @@
-﻿using System.Collections;
+﻿
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class GameManager : MonoBehaviour {
 
-	[SerializeField]
-	private GamePanel gamePanel;
+[SerializeField]
+private Player player;
+[SerializeField]
+private GamePanel gamePanel;
+private bool IsEnd;
+private float score = 0;
+private int countOfChanges = 0;
 
-	[SerializeField]
-	private Text scoreText;
-	
-	[SerializeField]
-	private Player player;
-	
-	private float score = 0;
 
-	private void Start(){
-		player.onGameOver += GameOver;
-		player.onWin += Win;
+private void Start(){
+	player.onGameOver += GameOver;
+	player.onGameWin += GameWin;
+}
+
+private void GameWin(){
+	float bestScore = PlayerPrefs.GetFloat("Score");
+	if(score > bestScore){
+		bestScore = score;
+		PlayerPrefs.SetFloat("Score", bestScore);
 	}
-
-	private void Update(){
-		score = player.transform.position.z;
-		scoreText.text = score.ToString("0");
+	player.transform.position = new Vector3(0,1,0);
+	IsEnd = true;
+	gamePanel.InitWin(score,bestScore,IsEnd);
+}
+private void GameOver(){
+	float bestScore = PlayerPrefs.GetFloat("Score");
+	if(score > bestScore){
+		bestScore = score;
+		PlayerPrefs.SetFloat("Score", bestScore);
 	}
-
-	private void Win(){
-		var bestScore = UpdateScore();
-		gamePanel.Init("YOU WON", score, bestScore);
+	player.transform.position = new Vector3(0,1,0);
+	IsEnd = true;
+	gamePanel.InitLose(score,bestScore,IsEnd);
+}
+private void Update(){
+	if(!IsEnd){
+	score = player.transform.position.z/100;
+	if((int)score % 5 ==0 && countOfChanges == 0)
+	{
+		player.Speed = (player.Speed + 5); 
+		countOfChanges = 1;
 	}
-
-	private void GameOver(){
-		var bestScore = UpdateScore();
-		gamePanel.Init("YOU LOSE", score, bestScore);
+	else if((int)score % 5 != 0)
+	 countOfChanges = 0;
 	}
+}
 
-	private float UpdateScore(){
-		var bestScore = PlayerPrefs.GetFloat("Score");
-		if(score > bestScore){
-			bestScore = score;
-			PlayerPrefs.SetFloat("Score", bestScore);
-		}
-		return bestScore;
-	}
+
 }
