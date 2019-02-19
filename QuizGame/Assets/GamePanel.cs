@@ -13,8 +13,8 @@ public class GamePanel : MonoBehaviour
 
     void Start()
     {
-        trueBtn.onClick.AddListener(delegate{SwitchButtonHandler(0)});
-		falseBtn.onClick.AddListener(delegate{SwitchButtonHandler(1)});
+        trueBtn.onClick.AddListener(delegate{SwitchButtonHandler(0);});
+		falseBtn.onClick.AddListener(delegate{SwitchButtonHandler(1);});
     }
 
     public void Init(string message){
