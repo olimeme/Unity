@@ -9,124 +9,61 @@ using UnityEngine.SceneManagement;
 using System.Threading;
 
 public class GameManager : MonoBehaviour {
-private GameData data;
 [SerializeField]
 private Text questionText;
 [SerializeField]
-private Button falseButton, trueButton,retryButton,quitButton;
+private Button falseBtn, trueBtn;
 [SerializeField]
-private Transform gameRoot,statisticsRoot;
+private Transform gameRoot;
+
+private Data gameData;
+private GameData data;
 [SerializeField]
-private Text amountText,correctText,incorrectText,procentText;
+private GameOverPanel gameoverPanel;
 
-[System.Serializable]
-public class Question
-{
-	public int id;
-	public string name_ru;
-	public bool right_answer;
-}
-
-[System.Serializable]
-public class GameData{
-	public List<Question> array;
-}
 private int currentQuestionIndex;
 private int correctAnswers = 0;
-private string gameDataFileName = "/Database/Questions.json";
 private int incorrectAnswers = 0;
 
 	private void Start(){
 		currentQuestionIndex = 0;
-		falseButton.onClick.AddListener(FalseButtonClick);
-		trueButton.onClick.AddListener(TrueButtonClick);
-		retryButton.onClick.AddListener(Retry);
-		quitButton.onClick.AddListener(Quit);
-		LoadGameData();
-		questionText.text = data.array[currentQuestionIndex].name_ru;
+		trueBtn.onClick.AddListener(delegate{Game(0);});
+		falseBtn.onClick.AddListener(delegate{Game(1);});
 	}
 
-	private void FalseButtonClick(){
-		int amountOfQuestions = (int)data.array.Count;
-		if(IsCorrect(currentQuestionIndex,false))
-			correctAnswers++;
-		else
-			incorrectAnswers++;
-		currentQuestionIndex++;
-		if(currentQuestionIndex == amountOfQuestions)
-		{
-			statisticsRoot.gameObject.SetActive(true);
-			gameRoot.gameObject.SetActive(false);
-			amountText.text = "Количество вопросов: " + amountOfQuestions;
-			correctText.text = "Количетсво правильных ответов: " + correctAnswers;
-			incorrectText.text = "Количетсво неправильных ответов: " + incorrectAnswers;
-			procentText.text = "Процент правильных ответов: " + (float)((correctAnswers*100/amountOfQuestions)) +"%";
-		}
-		else
-			questionText.text = data.array[currentQuestionIndex].name_ru;
-		Debug.Log(data.array);
+	public void Init(GameData data)
+	{
+		this.data = data;
+        questionText.text = data.array[currentQuestionIndex].name_ru;
+		Debug.Log(questionText.text);
 	}
-	private void TrueButtonClick(){
-		int amountOfQuestions = (int)data.array.Count;
-		if(IsCorrect(currentQuestionIndex,true))	
+
+	private void Game(int idx)
+	{
+		bool answer = true;
+        int amountOfQuestions = (int)data.array.Count;
+        if(idx == 0)
+            answer = true;
+        else 
+            answer = false;
+
+		if(IsCorrect(currentQuestionIndex,answer))	
 			correctAnswers++;
 		else
 			incorrectAnswers++;
 
 		currentQuestionIndex++;
-		if(currentQuestionIndex == amountOfQuestions)
+		
+        if(currentQuestionIndex == amountOfQuestions)
 		{
-			statisticsRoot.gameObject.SetActive(true);
-			gameRoot.gameObject.SetActive(false);
-			amountText.text = "Количество вопросов: " + amountOfQuestions;
-			correctText.text = "Количетсво правильных ответов: " + correctAnswers;
-			incorrectText.text = "Количетсво неправильных ответов: " + incorrectAnswers;
-			procentText.text = "Процент правильных ответов: " + (float)((correctAnswers*100/amountOfQuestions)) +"%";
+			gameoverPanel.PrintStatistics(amountOfQuestions,correctAnswers,incorrectAnswers);	
+        	gameRoot.gameObject.SetActive(false);
 		}
 		else
 			questionText.text = data.array[currentQuestionIndex].name_ru;
 		Debug.Log(data.array);
 	}
-
-	 private void LoadGameData()
-    {        	
-        string filePath = Application.dataPath +  gameDataFileName;
-
-        if(File.Exists(filePath))
-        {            
-            string dataAsJson = File.ReadAllText(filePath);             
-            data = JsonUtility.FromJson<GameData>(dataAsJson);
-			Shuffle(data.array);
-        }
-        else
-        {
-            Debug.LogError("Cannot load game data! Path = " + filePath);			
-        }
-    }
-
-	private void Retry()
-	{
-		SceneManager.LoadScene(SceneManager.GetActiveScene().name);	
-	}
-
-	private void Quit()
-	{
-		Application.Quit();
-	}
-	private void Shuffle(List<Question> alpha)  
-	{  
-    	for (int i = 0; i < alpha.Count; i++) {
-         Question temp = alpha[i];
-         int randomIndex = Random.Range(i, alpha.Count);
-         alpha[i] = alpha[randomIndex];
-         alpha[randomIndex] = temp;
-     }
-	}
-	private void ShowQuestion(int index)
-    {        
-        questionText.text = data.array[index].name_ru;
-    }
-
+	
 	private bool IsCorrect(int index, bool answer){
 		return data.array[index].right_answer == answer;
 	}
