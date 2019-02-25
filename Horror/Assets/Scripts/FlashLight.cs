@@ -50,8 +50,14 @@ public class FlashLight : MonoBehaviour
         }
     }
 
-    public void Charge(float value)
+    public bool Charge(float value)
     {
-        curBatteryLife+=value;
+        if((curBatteryLife+value)<maxBatteryLife)
+        {
+            curBatteryLife+=value;
+            return true;
+        }
+        else 
+            return false;
     }
 }

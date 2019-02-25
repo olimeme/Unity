@@ -798,7 +798,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d5163cf96260774ab4567c0683060e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactDistance: 10
+  interactDistance: 5
   camPos: {fileID: 1878258580}
   layer:
     serializedVersion: 2

@@ -30,8 +30,10 @@ public class InteractManager : MonoBehaviour
             {
                 if(hit.collider.tag == "Battery")
                 {
-                    flashLight.Charge(1.5f);
-                    Destroy(hit.collider.gameObject);
+                    if(flashLight.Charge(1.5f))
+                        Destroy(hit.collider.gameObject);
+                    else 
+                        return;
                 }
             }
         }
