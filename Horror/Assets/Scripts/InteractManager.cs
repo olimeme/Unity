@@ -5,27 +5,31 @@ using UnityEngine.UI;
 public class InteractManager : MonoBehaviour
 {
     [SerializeField]
+    private LayerMask layerMask;
+
+    [SerializeField]
     private float interactDistance;
 
     [SerializeField]
     private Transform camPos;
 
     [SerializeField]
-    private LayerMask layer;    
+    private FlashLight flashLight;
     
     [SerializeField]
-    private FlashLight flashLight;
+    private Image interactImage;
     void Start()
     {
-        
+       interactImage.gameObject.SetActive(false); 
     }
 
     void Update()
     {
         Ray ray = new Ray(camPos.position,camPos.forward);
         RaycastHit hit;
-        if(Physics.Raycast(ray,out hit,interactDistance))
+        if(Physics.Raycast(ray,out hit,interactDistance,layerMask))
         {
+            interactImage.gameObject.SetActive(true);
             if(Input.GetKeyDown(KeyCode.E))
             {
                 if(hit.collider.tag == "Battery")
@@ -35,7 +39,19 @@ public class InteractManager : MonoBehaviour
                     else 
                         return;
                 }
+                else if(hit.collider.tag == "Candle")
+                {//получаем скрипт  Candle  у свечи
+                    var candle = hit.collider.GetComponent<Candle>();;
+                    candle.SetActive();
+                }
+                else if(hit.collider.tag == "Key")
+                {
+                    var key = hit.collider.GetComponent<Key>();
+                    key.PickUp();
+                }
             }
+            else 
+                interactImage.gameObject.SetActive(false);
         }
     
     }
