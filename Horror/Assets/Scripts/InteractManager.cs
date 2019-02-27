@@ -18,6 +18,8 @@ public class InteractManager : MonoBehaviour
     
     [SerializeField]
     private Image interactImage;
+    [SerializeField]
+    private Door door;
     void Start()
     {
        interactImage.gameObject.SetActive(false); 
@@ -25,7 +27,7 @@ public class InteractManager : MonoBehaviour
 
     void Update()
     {
-        Ray ray = new Ray(camPos.position,camPos.forward);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if(Physics.Raycast(ray,out hit,interactDistance,layerMask))
         {
@@ -48,11 +50,16 @@ public class InteractManager : MonoBehaviour
                 {
                     var key = hit.collider.GetComponent<Key>();
                     key.PickUp();
+                    door.Unlock();
+                }
+                else if(hit.collider.tag == "Door")
+                {
+                    door.Open();
                 }
             }
-            else 
-                interactImage.gameObject.SetActive(false);
         }
+        else 
+            interactImage.gameObject.SetActive(false);
     
     }
 }

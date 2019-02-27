@@ -24,18 +24,21 @@ public class Door : MonoBehaviour
     {
         if(!isLocked)
         {
-            isOpen = true;
-            audio.clip = doorOpen;
-            audio.Play();
+            if(!isOpen)
+            {
+                isOpen = true;
+                audio.clip = doorOpen;
+                audio.Play();
+            }
         }
-        else 
+        else
         {
             audio.clip = doorClosed;
             audio.Play();
         }
     }
 
-    private void Unlock()
+    public void Unlock()
     {
         isLocked = false;
     }
@@ -46,7 +49,6 @@ public class Door : MonoBehaviour
         {
             Quaternion targetRotationOpen = Quaternion.Euler(0, doorOpenAngle, 0);
             transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotationOpen, smooth * Time.deltaTime);
-
         }
         else
         {
