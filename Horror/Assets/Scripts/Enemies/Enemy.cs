@@ -66,7 +66,8 @@ public class Enemy : MonoBehaviour
         RaycastHit hit;
         if(Physics.Linecast(triggerZone.position,player.position, out hit))
         {
-            navMesh.SetDestination();
+            navMesh.SetDestination(hit.transform.position);
+            state = "walk";
         }
     }
 
@@ -95,12 +96,11 @@ public class Enemy : MonoBehaviour
     {
         var remainingDistance = navMesh.remainingDistance;
         var stoppingDistance = navMesh.stoppingDistance;
-    //когда достигли цели
+        //когда достигли цели
         if(remainingDistance <= stoppingDistance && navMesh.pathPending == false)
         {
             state = "search";
             wait = waitTime;
-
         }
     }
     private void OnDrawGizmosSelected() {

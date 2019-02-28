@@ -18,6 +18,10 @@ public class InteractManager : MonoBehaviour
     
     [SerializeField]
     private Image interactImage;
+
+    [SerializeField]
+    private Door door;
+
     void Start()
     {
        interactImage.gameObject.SetActive(false); 
@@ -48,12 +52,14 @@ public class InteractManager : MonoBehaviour
                 {
                     var key = hit.collider.GetComponent<Key>();
                     key.PickUp();
-                    //door.Unlock();
+                    door.Unlock();
                 }
                 else if(hit.collider.tag == "Door")
                 {
-                    var door = hit.collider.GetComponentInParent<Door>();
-                    door.Open();
+                    if(!door.IsOpen())
+                        door.Open();
+                    else 
+                        door.Close();
                 }
             }
         }

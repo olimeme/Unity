@@ -38,9 +38,19 @@ public class Door : MonoBehaviour
         }
     }
 
+    public void Close()
+    {
+        isOpen = false;
+    }
+
     public void Unlock()
     {
         isLocked = false;
+    }
+
+    public bool IsOpen()
+    {
+        return isOpen;
     }
 
     private void Update ()
@@ -49,11 +59,13 @@ public class Door : MonoBehaviour
         {
             Quaternion targetRotationOpen = Quaternion.Euler(0, doorOpenAngle, 0);
             transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotationOpen, smooth * Time.deltaTime);
+            Debug.Log("true");
         }
         else
         {
             Quaternion targetRotationClosed = Quaternion.Euler(0, doorClosedAngle, 0);
             transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotationClosed, smooth * Time.deltaTime);
+            Debug.Log("false");
         }
     }
 }
