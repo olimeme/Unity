@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 public class Enemy : MonoBehaviour
 {
     [Header("Nav Mesh Settings")]
@@ -25,6 +26,17 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private Transform triggerZone;
 
+    [SerializeField]
+    private AudioSource audioSource;
+
+    [SerializeField]
+    private Transform deathCam;
+
+    [SerializeField]
+    private Transform deathCamPosition;
+
+    private bool highAlert = false;
+    private float alertLevel = 0;
     
     //состояние врага
     private string state = "idle";
@@ -56,6 +68,70 @@ public class Enemy : MonoBehaviour
         {
             Search();
         }
+
+        if(state == "chase")
+        {
+            ChaseForPlayer();
+        }
+
+        if(state == "hunt")
+        {
+            CheckDistance();
+        }
+
+        if(state == "kill")
+        {
+            deathCam.position = Vector3.Slerp(deathCam.position,deathCamPosition.position,10f * Time.deltaTime);
+            deathCam.rotation = Quaternion.Slerp(deathCam.rotation,deathCamPosition.rotation,10f * Time.deltaTime);
+            anime.speed = 0.4f;
+        }
+    }
+
+    private void ChaseForPlayer()
+    {
+        navMesh.SetDestination(player.position);
+        float distance = Vector3.Distance(transform.position,player.position);
+        var remainingDistance = navMesh.remainingDistance;
+        var stoppingDistance = navMesh.stoppingDistance;
+        if(distance > 10){
+            state = "hunt";
+            highAlert = true;
+            alertLevel = 20;
+        }else if(remainingDistance <= stoppingDistance && navMesh.pathPending == false)
+        {
+            var playerconntroller = player.GetComponent<PlayerController>();
+            if(playerconntroller.isAlive == true)
+            {
+                state = "kill";
+                KillPlayer();
+            }
+        }
+    }
+
+    private void KillPlayer()
+    {
+        //start animation
+        anime.SetTrigger("kill");
+        //start player event
+        var playerconntroller = player.GetComponent<PlayerController>();
+        playerconntroller.KillPlayer();
+        //turning on the camera 
+        deathCam.gameObject.SetActive(true);
+        //and set it a position of player camera
+        deathCam.transform.position = Camera.main.transform.position;
+        deathCam.transform.rotation = Camera.main.transform.rotation;
+        //later turn off the camera 
+        Camera.main.gameObject.SetActive(false);
+        
+        audioSource.pitch = 0.8f;
+        audioSource.Play();
+        Invoke("RestartLevel",1.5f);
+    }
+
+    private void RestartLevel()
+    {
+        var currentScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentScene);
     }
 
     public void CheckSight()
@@ -66,8 +142,17 @@ public class Enemy : MonoBehaviour
         RaycastHit hit;
         if(Physics.Linecast(triggerZone.position,player.position, out hit))
         {
-            navMesh.SetDestination(hit.transform.position);
-            state = "walk";
+            if(hit.collider.tag == "Player")
+            {
+                if(state != "kill")
+                {
+                    state = "chase";
+                    navMesh.speed = 2;
+                    anime.speed = 2;
+                    audioSource.pitch = 1.2f;
+                    audioSource.Play();
+                }
+            }
         }
     }
 
@@ -77,6 +162,17 @@ public class Enemy : MonoBehaviour
         Vector3 randomPos = Random.insideUnitSphere * searchRadius;
         NavMeshHit navHit;
         NavMesh.SamplePosition(transform.position + randomPos,out navHit,searchRadius,NavMesh.AllAreas);
+        if(highAlert)
+        {
+            NavMesh.SamplePosition(player.position,out navHit,searchRadius,NavMesh.AllAreas);
+            alertLevel -= 5;
+            if(alertLevel <= 0)
+            {
+                highAlert = false;
+                navMesh.speed = 1;
+                anime.speed = 1;
+            }
+        }
         navMesh.SetDestination(navHit.position);
         state = "walk";
     }

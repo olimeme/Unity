@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -986,25 +986,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: RigidBodyFPSController
       objectReference: {fileID: 0}
-    - target: {fileID: 100006, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 100006, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 89.87
+      value: 87.75
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.31
+      value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 427.87
+      value: 427.57
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1038,6 +1030,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 984882572, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
+      propertyPath: interactImage
+      value: 
+      objectReference: {fileID: 1860853911}
+    - target: {fileID: 984882572, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
+      propertyPath: door
+      value: 
+      objectReference: {fileID: 365412992}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 3}
 --- !u!1001 &979167771
@@ -1196,38 +1196,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &984882567 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100006, guid: c6453f8e1f814744d8b94e5a6d1f9942,
-    type: 3}
-  m_PrefabInstance: {fileID: 941340237}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &984882571 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400002, guid: c6453f8e1f814744d8b94e5a6d1f9942,
     type: 3}
   m_PrefabInstance: {fileID: 941340237}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &984882572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 984882567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d5163cf96260774ab4567c0683060e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 512
-  interactDistance: 3
-  camPos: {fileID: 1867275448}
-  flashLight: {fileID: 0}
-  interactImage: {fileID: 1860853911}
-  door: {fileID: 365412992}
 --- !u!1 &1007662709
 GameObject:
   m_ObjectHideFlags: 0
@@ -1706,12 +1680,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1860853909}
   m_CullTransparentMesh: 0
---- !u!4 &1867275448 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400000, guid: c6453f8e1f814744d8b94e5a6d1f9942,
-    type: 3}
-  m_PrefabInstance: {fileID: 941340237}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1974170214
 GameObject:
   m_ObjectHideFlags: 0
@@ -2018,7 +1986,7 @@ PrefabInstance:
     - target: {fileID: 5609080823456818367, guid: 4aa6e4acbd817a843916a0f7c5592cec,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 420.25
+      value: 418.11
       objectReference: {fileID: 0}
     - target: {fileID: 5609080823456818367, guid: 4aa6e4acbd817a843916a0f7c5592cec,
         type: 3}
@@ -2065,11 +2033,6 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 984882571}
-    - target: {fileID: 5609080822582684993, guid: 4aa6e4acbd817a843916a0f7c5592cec,
-        type: 3}
-      propertyPath: waitTime
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4aa6e4acbd817a843916a0f7c5592cec, type: 3}
 --- !u!1001 &5947878423961850521
@@ -2083,6 +2046,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 8147742270616007230, guid: d8915fdf76b498741960410c6a75b3e0,
+        type: 3}
+      propertyPath: audio
+      value: 
+      objectReference: {fileID: 365412991}
+    - target: {fileID: 8147742270616007230, guid: d8915fdf76b498741960410c6a75b3e0,
+        type: 3}
+      propertyPath: doorOpenAngle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8147742270616007230, guid: d8915fdf76b498741960410c6a75b3e0,
+        type: 3}
+      propertyPath: doorClosedAngle
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 5947878423113957908, guid: d8915fdf76b498741960410c6a75b3e0,
         type: 3}
@@ -2138,21 +2116,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8147742270616007230, guid: d8915fdf76b498741960410c6a75b3e0,
-        type: 3}
-      propertyPath: audio
-      value: 
-      objectReference: {fileID: 365412991}
-    - target: {fileID: 8147742270616007230, guid: d8915fdf76b498741960410c6a75b3e0,
-        type: 3}
-      propertyPath: doorOpenAngle
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8147742270616007230, guid: d8915fdf76b498741960410c6a75b3e0,
-        type: 3}
-      propertyPath: doorClosedAngle
-      value: 90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d8915fdf76b498741960410c6a75b3e0, type: 3}
