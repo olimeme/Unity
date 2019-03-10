@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 public class InteractManager : MonoBehaviour
 {
     [SerializeField]
@@ -20,8 +21,12 @@ public class InteractManager : MonoBehaviour
     private Image interactImage;
 
     [SerializeField]
-    private Door door;
+    private Player player;
 
+    [SerializeField]
+    private GameOverPanel gameoverMenu;
+
+    const int maxKeyAmount = 3; 
     void Start()
     {
        interactImage.gameObject.SetActive(false); 
@@ -43,23 +48,17 @@ public class InteractManager : MonoBehaviour
                     else 
                         return;
                 }
-                else if(hit.collider.tag == "Candle")
-                {//получаем скрипт  Candle  у свечи
-                    var candle = hit.collider.GetComponent<Candle>();;
-                    candle.SetActive();
-                }
                 else if(hit.collider.tag == "Key")
                 {
                     var key = hit.collider.GetComponent<Key>();
                     key.PickUp();
-                    door.Unlock();
-                }
-                else if(hit.collider.tag == "Door")
-                {
-                    if(!door.IsOpen())
-                        door.Open();
-                    else 
-                        door.Close();
+                    player.AddKey();
+                    if(player.GetKeys() == maxKeyAmount)
+                    {
+                        Application.Quit();
+                        Debug.Log("GAMEOVER");
+                        gameoverMenu.InitWin();
+                    }
                 }
             }
         }

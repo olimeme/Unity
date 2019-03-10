@@ -51,7 +51,6 @@ public class GamePanel : MonoBehaviour {
 		Application.Quit();
 	}
 	private void OnDestroy(){
-		retryBtn.onClick.RemoveAllListeners();
 		quitBtn.onClick.RemoveAllListeners();
 	}
 }

@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
 {
     [Header("Nav Mesh Settings")]
     [SerializeField]
-    private Transform player;
+    private Player player;
 
     [SerializeField]
     private NavMeshAgent navMesh;
@@ -51,9 +51,14 @@ public class Enemy : MonoBehaviour
     {
         if(isAlive == false)
             return;
-        
+
         anime.SetFloat("Speed", navMesh.velocity.magnitude);
         
+        if(player.GetKeys() == 2)
+        {
+            state = "killed";
+        }
+
         if(state == "idle")
         {
             GoToRandomPoint();
@@ -79,6 +84,12 @@ public class Enemy : MonoBehaviour
             CheckDistance();
         }
 
+        if(state == "killed")
+        {
+            navMesh.transform.position = new Vector3(85,0,483);
+            state = "chase";
+        }
+
         if(state == "kill")
         {
             deathCam.position = Vector3.Slerp(deathCam.position,deathCamPosition.position,10f * Time.deltaTime);
@@ -89,8 +100,8 @@ public class Enemy : MonoBehaviour
 
     private void ChaseForPlayer()
     {
-        navMesh.SetDestination(player.position);
-        float distance = Vector3.Distance(transform.position,player.position);
+        navMesh.SetDestination(player.transform.position);
+        float distance = Vector3.Distance(transform.position,player.transform.position);
         var remainingDistance = navMesh.remainingDistance;
         var stoppingDistance = navMesh.stoppingDistance;
         if(distance > 10){
@@ -140,7 +151,7 @@ public class Enemy : MonoBehaviour
             return;
 
         RaycastHit hit;
-        if(Physics.Linecast(triggerZone.position,player.position, out hit))
+        if(Physics.Linecast(triggerZone.position,player.transform.position, out hit))
         {
             if(hit.collider.tag == "Player")
             {
@@ -164,7 +175,7 @@ public class Enemy : MonoBehaviour
         NavMesh.SamplePosition(transform.position + randomPos,out navHit,searchRadius,NavMesh.AllAreas);
         if(highAlert)
         {
-            NavMesh.SamplePosition(player.position,out navHit,searchRadius,NavMesh.AllAreas);
+            NavMesh.SamplePosition(player.transform.position,out navHit,searchRadius,NavMesh.AllAreas);
             alertLevel -= 5;
             if(alertLevel <= 0)
             {
