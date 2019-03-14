@@ -6,6 +6,11 @@ public class Node : MonoBehaviour
 {
     private GameObject turretObject;
     private TurretPriceList turret;
+    private bool isUpgraded = false;
+
+    public TurretPriceList  Turret {get{return turret;}}
+    public bool IsUpgraded {get{return isUpgraded;}}
+
     [SerializeField]
     private Color hoverColor;
     private Color startColor;
@@ -15,6 +20,25 @@ public class Node : MonoBehaviour
     {
         renderer = GetComponent<MeshRenderer>();
         startColor = renderer.material.color;
+    }
+
+    public void UpgradeTurret()
+    {
+        if(PlayerStats.Money < turret.upgradeCost)
+        {
+            Debug.Log("Not enough money");
+            return;
+        }
+        PlayerStats.Money -= turret.upgradeCost;
+        Destroy(turretObject);
+        turretObject = Instantiate(turret.upgradedPrefab,transform.position + new Vector3(0,0.5f,0),transform.rotation);
+        isUpgraded = true;
+    }
+
+    public void SellTurret()
+    {
+        PlayerStats.Money += turret.sellingCost;
+        Destroy(turretObject);
     }
 
     private void OnMouseEnter()
@@ -37,7 +61,7 @@ public class Node : MonoBehaviour
     private void OnMouseDown() {
         if(turret !=null)
         {
-            Debug.Log("Cant build here");
+            BuildManager.instance.SelectNode(this);
             return;
         }    
         turret = BuildManager.instance.GetTurretToBuild();

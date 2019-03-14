@@ -7,8 +7,10 @@ using UnityEngine.UI;
 public class TurretPriceList
 {
     public GameObject prefab;
+    public GameObject upgradedPrefab;
     public int cost;
     public int upgradeCost;
+    public int sellingCost;
 }
 
 public class Shop : MonoBehaviour
